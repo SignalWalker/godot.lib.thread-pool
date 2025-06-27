@@ -57,7 +57,7 @@ class TaskAny extends RefCounted:
 		if self.status == TaskStatus.RUNNING:
 			return await self.done
 		if self.status == TaskStatus.DONE:
-			return self.results.values()
+			return self.result
 
 		self.status = TaskStatus.RUNNING
 
@@ -66,9 +66,9 @@ class TaskAny extends RefCounted:
 
 		return await self.done
 
-	func _on_task_done(id: int, result: Variant) -> void:
+	func _on_task_done(_id: int, res: Variant) -> void:
 		if self.status == TaskStatus.RUNNING:
-			self.result = result
+			self.result = res
 			self.status = TaskStatus.DONE
 			self.done.emit()
 
@@ -81,14 +81,14 @@ signal done(result: Variant)
 
 static func all(tasks: Array[Variant]) -> TaskAll:
 	var res: Array[Task] = []
-	for task: Variant in tasks:
-		res.push_back(Task.new(task))
+	for t: Variant in tasks:
+		res.push_back(Task.new(t))
 	return TaskAll.new(res)
 
 static func any(tasks: Array[Variant]) -> TaskAny:
 	var res: Array[Task] = []
-	for task: Variant in tasks:
-		res.push_back(Task.new(task))
+	for t: Variant in tasks:
+		res.push_back(Task.new(t))
 	return TaskAny.new(res)
 
 func _init(t: Variant) -> void:
