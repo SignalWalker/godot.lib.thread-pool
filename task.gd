@@ -68,6 +68,7 @@ class TaskAny extends RefCounted:
 
 	func _on_task_done(_id: int, res: Variant) -> void:
 		if self.status == TaskStatus.RUNNING:
+			# TODO :: cancel other tasks
 			self.result = res
 			self.status = TaskStatus.DONE
 			self.done.emit()
